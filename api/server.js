@@ -1,6 +1,7 @@
+// api/server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Adjust the path if necessary
+const authRoutes = require('./routes/authRoutes'); // Ensure this path is correct
 
 const app = express();
 const PORT = 5000;
@@ -21,18 +22,8 @@ mongoose.connect(MONGODB_URI, {
   process.exit(1); // Exit the application if there's a connection error
 });
 
-// Example route to create a user
-app.post('/create-user', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    const newUser = new User({ username, email, password });
-    await newUser.save();
-    res.status(201).send('User created successfully');
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+// Use routes
+app.use('/api', authRoutes);
 
 // Start server
 app.listen(PORT, () => {
